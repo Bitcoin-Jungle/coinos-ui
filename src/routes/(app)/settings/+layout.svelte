@@ -39,6 +39,7 @@
     { name: "account", key: "ACCOUNT" },
     { name: "preferences", key: "POINT_OF_SALE" },
     { name: "security", key: "SECURITY" },
+    { name: "boltcard", key: "BOLT_CARD" },
   ];
 
   let { about, id, username } = $derived(user);

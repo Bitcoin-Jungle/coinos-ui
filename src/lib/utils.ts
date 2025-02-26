@@ -52,19 +52,27 @@ export const get = (url: string, headers = {}) => {
 export const post = async (
 	url: string,
 	body: object,
-	headers: HeadersInit | undefined = undefined,
+	options: { headers?: HeadersInit; method?: string } = {},
 ) => {
-	headers = {
+	const { headers = {}, method = "POST" } = options;
+	
+	const requestHeaders = {
 		"content-type": "application/json",
 		accept: "application/json",
 		...headers,
 	};
 
-	const response = await fetch(base + url, {
-		method: "POST",
-		body: JSON.stringify(body),
-		headers,
-	})
+	const requestOptions: RequestInit = {
+		method,
+		headers: requestHeaders,
+	};
+
+	// Only add body for non-GET and non-HEAD requests
+	if (method !== "GET" && method !== "HEAD") {
+		requestOptions.body = JSON.stringify(body);
+	}
+
+	const response = await fetch(base + url, requestOptions)
 		.then(async (r) => {
 			if (r.ok) return r.text();
 			const text = await r.text();
